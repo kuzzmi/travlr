@@ -1,4 +1,5 @@
 var page = require('webpage').create();
+var fs = require('fs');
 var url = 'https://www.sbb.ch/ticketshop/b2c/adw.do?4092';
 var stepIndex = 0;
 var needsToDefine = false;
@@ -13,7 +14,7 @@ var origin = args[1],
  * the string for the message, the line number, and the source identifier.
  */
 page.onConsoleMessage = function(msg, line, source) {
-    console.log('log: ' + msg);
+    console.log(msg);
 };
 
 /**
@@ -68,7 +69,7 @@ page.onLoadFinished = function(status) {
 // Step 1
 function enterFrom() {
     page.evaluate(function() {
-        document.getElementById('inputDatum').value = '28.10.2014';
+        document.getElementById('inputDatum').value = '01.11.2014';
         document.querySelector("[name='artikelspez.abgang.method:cityOption']").click();
     });
 }
@@ -93,15 +94,43 @@ function goToNextPage() {
 function getPrices() {
     page.evaluate(function() {
         var options = document.querySelectorAll('.base.unit.lastUnit');
+        // console.log(options.length);
+        if (options.length === 3) {
 
-        if (options.length === 0) {
-            console.log(JSON.stringify(ticketPriceMap));
+            var getPropertiesWithPrefix = function(obj, prefix) {
+                var result = {};
+
+                for (var k in obj) {
+                    if (k.indexOf(prefix) === 0) {
+                        result[
+                            k.replace(prefix + '-', '').toLowerCase()
+                        ] = obj[k];
+                    }
+                }
+
+                return result;
+            };
+
+            var class2 = getPropertiesWithPrefix(ticketPriceMap, 'KLASSE_2');
+            var class1 = getPropertiesWithPrefix(ticketPriceMap, 'KLASSE_1');
+
+            var prices = {
+                class1: {
+                    einfach: getPropertiesWithPrefix(class1, 'einfach'),
+                    retour: getPropertiesWithPrefix(class1, 'retour')
+                },
+                class2: {
+                    einfach: getPropertiesWithPrefix(class2, 'einfach'),
+                    retour: getPropertiesWithPrefix(class2, 'retour')
+                }
+            };
+            console.log(JSON.stringify(prices));
         } else {
             var optionsRaw = [];
             for (var i = 0; i < options.length; i++) {
                 optionsRaw.push(parseFloat(options[i].innerText.replace('ab CHF', '')));
             }
-
+            console.log(optionsRaw);
         }
     });
 }
