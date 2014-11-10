@@ -1,6 +1,6 @@
 var page = require('webpage').create();
 var fs = require('fs');
-var url = 'http://www.sbb.ch/ticketshop/b2c/adw.do?4092';
+var url = 'https://www.sbb.ch/ticketshop/b2c/adw.do?4092';
 var stepIndex = 0;
 var needsToDefine = false;
 var system = require('system');
@@ -36,6 +36,9 @@ page.onError = function(msg, trace) {
 page.open(url, function(status) {
     if (status === 'success') {
         page.injectJs('//code.jquery.com/jquery-1.11.0.min.js');
+    } else {
+        console.log("Status: " + status);
+        phantom.exit();
     }
 });
 
