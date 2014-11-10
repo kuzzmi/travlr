@@ -1,6 +1,6 @@
 var page = require('webpage').create();
 var fs = require('fs');
-var url = 'https://www.sbb.ch/ticketshop/b2c/adw.do?4092';
+var url = 'http://www.sbb.ch/ticketshop/b2c/adw.do?4092';
 var stepIndex = 0;
 var needsToDefine = false;
 var system = require('system');
@@ -69,7 +69,7 @@ page.onLoadFinished = function(status) {
 // Step 1
 function enterFrom() {
     page.evaluate(function() {
-        document.getElementById('inputDatum').value = '01.11.2014';
+        document.getElementById('inputDatum').value = '11.11.2014';
         document.querySelector("[name='artikelspez.abgang.method:cityOption']").click();
     });
 }
