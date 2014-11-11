@@ -11,16 +11,12 @@ var fn = function(item, cb) {
 
 for (var i = 0; i <= citiesLength; i++) {
     for (var j = i + 1; j <= citiesLength; j++) {
-        items.push(function(callback) {
-            (function(_i, _j) {
-                fn(_i + ' ' + _j, callback);
-            })(i, j);
-        });
+        items.push(i + ' ' + j);
     }
 }
 
 async.eachLimit(items, 3, function(item, done) {
-    item(function() {
+    fn(item, function() {
         done();
     });
 }, function(err) {

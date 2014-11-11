@@ -1,0 +1,24 @@
+.md-basic {
+    border: 1px solid #c0c0c0;
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    background-color: #FF5722;
+    left: 400px;
+    top: 400px;
+    box-shadow: 0px 4px 5px lightgrey, 0px 0px 3px lightgrey;
+    transition: box-shadow 0.2s ease;
+}
+
+.md-basic:hover {
+    box-shadow: 0px 8px 25px lightgrey, 0px 0px 10px lightgrey;
+}
+
+.md-basic:active {
+    box-shadow: 0px 2px 3px lightgrey, 0px 0px 3px lightgrey;
+}
+
+.touched {
+    background-image: url("/assets/img/touch-effect.png");
+    background-repeat: no-repeat;
+}

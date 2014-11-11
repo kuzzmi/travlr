@@ -1,0 +1,46 @@
+/* Variables defining */
+$light-accent: #FF805F;
+$accent: #F05D38;
+$dark-accent: #C53B19;
+
+//rgb(60, 118, 221);
+
+$white: rgb(255, 255, 255);
+$grey-lighter: rgb(247, 247, 247);
+$grey-light: rgb(242, 242, 242);
+$grey: rgb(231, 231, 231);
+$grey-dark: rgb(220, 220, 220);
+$grey-darker: rgb(170, 170, 170);
+$grey-darkest: rgb(67, 67, 67);
+
+/* Borders */
+$border-solid-general: 1px solid $grey-dark;
+$border-dotted-general: 1px dotted $grey-dark;
+
+/* Transitions */
+$animation-length: 0.3s;
+$transitions-width: width $animation-length ease-out;
+$transitions-opacity: opacity $animation-length ease-out;
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url("./fonts/OpenSans-Regular.ttf");
+}
+
+
+/* Mixins */
+@mixin absolute-fullscreen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+@mixin transition-ease-out($attr) {
+    transition: $attr $animation-length ease-out;
+}
+
+@mixin transition-bezier($attr) {
+    transition: $attr 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+}

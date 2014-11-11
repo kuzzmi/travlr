@@ -1,0 +1,21 @@
+// bower:scss
+// endbower
+
+/* imports */
+@import "_bits";
+@import "_search";
+@import "_media_queries";
+@import "_navbar";
+@import "_columns";
+@import "_list";
+@import "_widget";
+@import "_filters";
+@import "_helpers";
+
+body,
+html {
+    height: 100%;
+    background-color: $grey-light;
+    overflow: hidden;
+    font-family: 'OpenSans', 'Tahoma', 'Verdana', sans-serif;
+}

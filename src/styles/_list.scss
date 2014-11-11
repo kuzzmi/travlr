@@ -1,0 +1,45 @@
+/* List directive styles */
+.list {
+    ul {
+        // padding-top: 50px;
+
+    }
+    li {
+        cursor: pointer;
+        font-size: 12px;
+        a {
+            border-radius: 0;
+            color: $grey-darkest;
+            &:hover {
+                @include transition-bezier(background-color);
+                background-color: $light-accent;
+                color: $grey-lighter;
+            }
+        }
+        &.active > a {
+            @include transition-bezier(background-color);
+            background-color: $accent;
+            &:hover, &:focus {
+                color: $grey-lighter;
+                background-color: $accent;
+            }
+        }
+    }
+    .title {
+        margin: {
+            left: 15px;
+            top: 10px;
+        };
+    }
+    .entity-title {
+        text-align: center;
+        margin: {
+            top: 0px;
+            bottom: 0px;
+        };
+        background-color: $grey-dark;
+        $height: 50px;
+        height: $height;
+        line-height: $height;
+    }
+}

@@ -1,0 +1,8 @@
+.no-transitions {
+    transition: none !important;
+}
+
+.touched {
+    background-image: url("/assets/img/touch-effect.png");
+    background-repeat: no-repeat;
+}

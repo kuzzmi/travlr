@@ -1,0 +1,96 @@
+.navbar .container-fluid {
+    padding: 0;
+}
+
+.navbar-default {
+    .navbar-header {
+        border-right: $border-solid-general;
+        background-color: $grey;
+        .navbar-brand {
+            font-weight: bold;
+            color: #F05F3B;
+            float: none;
+            margin: 0 auto;
+            font-size: 22px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px #fff;
+            padding: 2px;
+            img {
+                margin-top: 5px;
+                height: 40px;
+            }
+        }
+        .panels-toggle {
+            display: none;
+            @include max-screen(767px) {
+                display: block;
+                margin: 0;
+                margin-left: 16px;
+                height: 35px;
+                margin-top: 7px;
+                width: 42px;
+                color: #888;
+                font-size: 15px;
+                padding-top: 7px;
+                padding-left: 11px;
+            }
+        }
+    }
+    .navbar-nav {
+        li {
+            a {
+                color: $grey-darkest;
+                font-size: 12px;
+                padding: 15px 20px;
+                @keyframes blink {
+                    0% {
+                        opacity: 1.0;
+                    }
+                    50% {
+                        opacity: 0.0;
+                    }
+                    100% {
+                        opacity: 1.0;
+                    }
+                }
+
+                .badge-update {
+                    animation: blink 2s steps(30, start) infinite;
+                    transition: opacity 0.3s ease-in;
+                    margin-left: 10px;
+                    margin-right: -10px;
+                    padding: 4px 7px;
+                    background: rgb(204, 49, 49);
+                }
+                &:hover {
+                    @include transition-bezier(background-color);
+                    background-color: $light-accent;
+                    color: $grey-lighter;
+                }
+                @include max-screen(767px) {
+                    font-size: 14px;
+                }
+            }
+            &.active {
+                a {
+                    background-color: $accent;
+                    color: $grey-light;
+                    z-index: 10;
+                    &:hover {
+                        @include transition-bezier(background-color);
+                        background-color: $accent;
+                        color: $grey-lighter;
+                    }
+                }
+            }
+            @include max-screen(767px) {
+                padding-left: 15px;
+            }
+        }
+        &.top-menu {
+            @include max-screen(767px) {
+                margin-top: 0;
+            }
+        }
+    }
+}

@@ -1,0 +1,163 @@
+div[class*='-column'] {
+    padding: 0;
+    height: 100%;
+}
+
+.left-column,
+.right-column {
+    // z-index: 10;
+    background-color: $grey;
+}
+
+.left-column {
+    border-right: $border-solid-general;
+    overflow: hidden;
+    z-index: 100;
+    hr {
+        margin-bottom: 0;
+    }
+    @include max-screen(767px) {
+        position: absolute;
+        top: 50px;
+        bottom: 0;
+        z-index: 10;
+        height: auto;
+        width: 90%;
+        left: -90%;
+        @include transition-bezier(left);
+        &.toggled {
+            left: 0;
+        }
+    }
+}
+
+.right-column {
+    height: 100%;
+    .sliding-panel-container {
+        @include transition-bezier(left);
+        border: 1px solid gainsboro;
+        z-index: 20;
+        position: absolute;
+        background-color: #fff;
+        left: 9999999px;
+        top: 60px;
+        bottom: 10px;
+        right: 10px;
+        border-radius: 4px;
+        padding: 10px;
+        overflow: hidden;
+    }
+    iframe {
+        margin: 10px;
+        position: relative;
+        width: auto;
+        border: none;
+    }
+}
+
+.iframe-protector {
+    @include absolute-fullscreen;
+    z-index: 100;
+}
+
+.mid-column {
+    overflow: auto;
+    padding: 0;
+    background-color: $grey-light;
+    @include max-screen(767px) {
+        position: absolute;
+        top: 50px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        left: 0%;
+    }
+}
+
+@keyframes loading {
+    from {
+        width: 1%;
+    }
+    to {
+        width: 100;
+    }
+}
+
+
+@keyframes shining {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+
+.portal-container {
+    @include absolute-fullscreen;
+    padding-top: 50px;
+    & > div,
+    & > div > .row {
+        height: 100%;
+        overflow: hidden;
+    }
+    div[ui-view] {
+        height: 100%;
+    }
+    .loader {
+        @include absolute-fullscreen;
+        z-index: 1000000;
+        background: url("/assets/img/ajax-loader.gif") no-repeat scroll center center rgba(255, 255, 255, 0.75);
+    }
+    .loader-wrapper {
+        @include absolute-fullscreen;
+        @include max-screen(767px) {
+            // display: none;
+        }
+
+        z-index: 90;
+        background-color: rgba(255, 255, 255, 0.65);
+        .loader-instance {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 221px;
+            height: 48px;
+            margin-top: -24px;
+            margin-left: -111px;
+            .pulse-progress-bar {
+                animation: loading 3s ease-in, shining 3s infinite ease 2s;
+                position: absolute;
+                width: 0%;
+                height: 100%;
+                background-image: url("/assets/img/pulse_loader.png");
+            }
+        }
+    }
+    .panel-container {
+        position: relative;
+        padding: 10px;
+        height: 100%;
+        iframe {
+            width: 100%;
+            border: none;
+        }
+    }
+}
+
+.sliding-panel {
+    @include transition-bezier(left);
+    display: none;
+    position: absolute;
+    background: url("/assets/img/resizer.png") no-repeat scroll center;
+    top: 50px;
+    bottom: 0;
+    right: 10px;
+    width: 4px;
+    cursor: e-resize;
+    background-color: #c0c0c0;
+    &:hover {
+        background-color: #939393;
+    }
+}

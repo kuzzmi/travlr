@@ -1,0 +1,48 @@
+.widget-container {
+    overflow: hidden;
+    border: $border-solid-general;
+    // border-radius: 4px;
+    background-color: #FFFFFF;
+    margin: {
+        right: 10px;
+        bottom: 10px;
+    };
+    // animation: bounce 0.3s 1;
+    // @include transition-bezier(margin);
+    &:hover {
+        // @include transition-bezier(box-shadow);
+        // box-shadow: 0px 4px 10px #C0C0C0;
+        // margin: {
+        // right: 15px;
+        // bottom: 14px;
+        // top: -4px;
+        // };
+
+    }
+    padding: 10px;
+}
+
+.sliding-panel-container {
+    .widget-container {
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        border: none;
+        iframe {
+            margin: 0;
+            z-index: 0;
+        }
+    }
+}
+
+@keyframes bounce {
+    0% {
+        max-width: 1000px;
+    }
+    75% {
+        max-width: 300px;
+    }
+    100% {
+        max-width: 400px;
+    }
+}
