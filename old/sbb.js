@@ -72,7 +72,7 @@ page.onLoadFinished = function(status) {
 // Step 1
 function enterFrom() {
     page.evaluate(function() {
-        document.getElementById('inputDatum').value = '11.11.2014';
+        document.getElementById('inputDatum').value = '16.11.2014';
         document.querySelector("[name='artikelspez.abgang.method:cityOption']").click();
     });
 }
