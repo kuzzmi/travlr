@@ -7,6 +7,7 @@ var system = require('system');
 var args = system.args;
 var origin = args[1],
     dest = args[2];
+var exit = false;
 
 /**
  * From PhantomJS documentation:
@@ -45,7 +46,6 @@ page.open(url, function(status) {
 page.onLoadFinished = function(status) {
     // Save screenshot
     // for debugging purposes
-    var exit = false;
     if (status === 'success') {
         switch (stepIndex) {
             case 0:
@@ -59,7 +59,9 @@ page.onLoadFinished = function(status) {
                 break;
             case 3:
                 getPrices();
-                exit = true;
+                break;
+            case 4:
+                getPrices();
                 break;
         }
         page.render("step" + stepIndex+++".png");
@@ -72,7 +74,7 @@ page.onLoadFinished = function(status) {
 // Step 1
 function enterFrom() {
     page.evaluate(function() {
-        document.getElementById('inputDatum').value = '16.11.2014';
+        document.getElementById('inputDatum').value = '18.11.2014';
         document.querySelector("[name='artikelspez.abgang.method:cityOption']").click();
     });
 }
@@ -95,10 +97,9 @@ function goToNextPage() {
 
 // Step 4
 function getPrices() {
-    page.evaluate(function() {
+    page.evaluate(function(step, _exit) {
         var options = document.querySelectorAll('.base.unit.lastUnit');
-        // console.log(options.length);
-        if (options.length === 3) {
+        if (options.length <= 3) {
 
             var getPropertiesWithPrefix = function(obj, prefix) {
                 var result = {};
@@ -114,26 +115,72 @@ function getPrices() {
                 return result;
             };
 
-            var class2 = getPropertiesWithPrefix(ticketPriceMap, 'KLASSE_2');
-            var class1 = getPropertiesWithPrefix(ticketPriceMap, 'KLASSE_1');
+            var prices;
+            var class1;
+            var class2;
 
-            var prices = {
-                class1: {
-                    einfach: getPropertiesWithPrefix(class1, 'einfach'),
-                    retour: getPropertiesWithPrefix(class1, 'retour')
-                },
-                class2: {
-                    einfach: getPropertiesWithPrefix(class2, 'einfach'),
-                    retour: getPropertiesWithPrefix(class2, 'retour')
-                }
-            };
+            if (step === 3) {
+                class2 = getPropertiesWithPrefix(ticketPriceMap, 'KLASSE_2');
+                class1 = getPropertiesWithPrefix(ticketPriceMap, 'KLASSE_1');
+
+                prices = {
+                    class1: {
+                        einfach: getPropertiesWithPrefix(class1, 'einfach'),
+                        retour: getPropertiesWithPrefix(class1, 'retour')
+                    },
+                    class2: {
+                        einfach: getPropertiesWithPrefix(class2, 'einfach'),
+                        retour: getPropertiesWithPrefix(class2, 'retour')
+                    }
+                };
+            } else {
+                class2 = getPropertiesWithPrefix(ticketPriceMap, 'KLASSE_2-');
+                class1 = getPropertiesWithPrefix(ticketPriceMap, 'KLASSE_1-');
+
+                prices = {
+                    class1: {
+                        full: class1[0],
+                        half: class1[1]
+                    },
+                    class2: {
+                        full: class2[0],
+                        half: class2[1]
+                    }
+                };
+            }
+            _exit = true;
             console.log(JSON.stringify(prices));
         } else {
             var optionsRaw = [];
+            var sortedArray = [];
+
             for (var i = 0; i < options.length; i++) {
                 optionsRaw.push(parseFloat(options[i].innerText.replace('ab CHF', '')));
             }
-            console.log(optionsRaw);
+
+            sortedArray = optionsRaw.slice().sort(function(a, b) {
+                return a - b;
+            });
+
+            function click(el) {
+                var ev = document.createEvent('MouseEvent');
+                ev.initMouseEvent(
+                    'click',
+                    true /* bubble */ , true /* cancelable */ ,
+                    window, null,
+                    0, 0, 0, 0, /* coordinates */
+                    false, false, false, false, /* modifier keys */
+                    0 /*left*/ , null
+                );
+                el.dispatchEvent(ev);
+            }
+
+            var lowestIndex = optionsRaw.indexOf(sortedArray[0]);
+
+            var element = document.querySelector('[name="billettauswahl.pakete[' +
+                lowestIndex + '].method:select"]');
+
+            click(element);
         }
-    });
+    }, stepIndex, exit);
 }
