@@ -2,12 +2,11 @@ var page = require('webpage').create();
 var fs = require('fs');
 var url = 'https://www.sbb.ch/ticketshop/b2c/adw.do?4092';
 var stepIndex = 0;
-var needsToDefine = false;
 var system = require('system');
 var args = system.args;
 var origin = args[1],
-    dest = args[2];
-var exit = false;
+    dest = args[2],
+    date = args[3];
 
 /**
  * From PhantomJS documentation:
@@ -58,10 +57,10 @@ page.onLoadFinished = function(status) {
                 goToNextPage();
                 break;
             case 3:
-                getPrices();
+                var exit = getPrices();
                 break;
             case 4:
-                getPrices();
+                var exit = getPrices();
                 break;
         }
         page.render("step" + stepIndex+++".png");
@@ -73,10 +72,10 @@ page.onLoadFinished = function(status) {
 
 // Step 1
 function enterFrom() {
-    page.evaluate(function() {
-        document.getElementById('inputDatum').value = '18.11.2014';
+    page.evaluate(function(date) {
+        document.getElementById('inputDatum').value = date;
         document.querySelector("[name='artikelspez.abgang.method:cityOption']").click();
-    });
+    }, date);
 }
 
 // Step 2
@@ -97,7 +96,7 @@ function goToNextPage() {
 
 // Step 4
 function getPrices() {
-    page.evaluate(function(step, _exit) {
+    var toExit = page.evaluate(function(step) {
         var options = document.querySelectorAll('.base.unit.lastUnit');
         if (options.length <= 3) {
 
@@ -148,8 +147,8 @@ function getPrices() {
                     }
                 };
             }
-            _exit = true;
             console.log(JSON.stringify(prices));
+            return true;
         } else {
             var optionsRaw = [];
             var sortedArray = [];
@@ -181,6 +180,9 @@ function getPrices() {
                 lowestIndex + '].method:select"]');
 
             click(element);
+            return false;
         }
-    }, stepIndex, exit);
+    }, stepIndex);
+
+    return toExit;
 }

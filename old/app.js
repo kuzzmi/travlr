@@ -2,6 +2,7 @@
 
 var exec = require('child_process').exec;
 var async = require('async');
+var datejs = require('datejs');
 var fs = require('fs');
 
 // Loading cities file
@@ -10,7 +11,7 @@ var cities = JSON.parse(fs.readFileSync('cities.json'));
 var data = {};
 
 var citiesLength = 3;
-var asyncStack = [];
+var routes = [];
 //var citiesLength = Object.keys(cities).length;
 //console.log(citiesLenght);
 
@@ -21,32 +22,27 @@ for (var i = 0; i <= citiesLength; i++) {
                 data[i] = {};
             data[i][j] = {};
 
-            asyncStack.push(function(callback) {
-                (function(_i, _j) {
-                    exec('phantomjs sbb.js ' + _i + ' ' + _j,
-                        function(err, stdout, stderr) {
-                            console.log(JSON.stringify(data));
-                            console.log(_i, _j);
-
-                            try {
-                                data[_i][_j] = JSON.parse(stdout);
-                            } catch (e) {
-                                data[_i][_j] = stdout;
-                            }
-
-                            callback();
-                        })
-                })(i, j);
+            routes.push({
+                origin: i,
+                dest: j
             });
         }
     };
 };
 
-async.eachLimit(asyncStack, 2, function(item, done) {
-    console.log('start');
-    item(function() {
-        console.log('done');
-        done();
+async.eachLimit(routes, 2, function(route, done) {
+    var origin = route.origin;
+    var dest = route.dest;
+    var cmd = 'phantomjs sbb.js ' + origin + ' ' + dest +
+        ' \'' + Date.today().toString('dd.MM.yyyy') + '\'';
+    exec(cmd, function(err, stdout, stderr) {
+        try {
+            data[origin][dest] = JSON.parse(stdout);
+        } catch (e) {
+            data[origin][dest] = stdout;
+        } finally {
+            done();
+        }
     });
 }, function(err) {
     if (err) {
