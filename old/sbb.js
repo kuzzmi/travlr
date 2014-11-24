@@ -29,7 +29,7 @@ page.onError = function(msg, trace) {
     console.log(msg);
     trace.forEach(function(item) {
         console.log('  ', item.file, ':', item.line);
-    })
+    });
 }
 
 // Callback is executed each time a page is loaded...
@@ -99,37 +99,59 @@ function getPrices() {
     var toExit = page.evaluate(function(step) {
         var options = document.querySelectorAll('.base.unit.lastUnit');
         if (options.length <= 3) {
+            var prices;
+            var class1;
+            var class2;
 
             var getPropertiesWithPrefix = function(obj, prefix) {
                 var result = {};
 
                 for (var k in obj) {
                     if (k.indexOf(prefix) === 0) {
-                        result[
-                            k.replace(prefix + '-', '').toLowerCase()
-                        ] = obj[k];
+                        result[k.replace(prefix + '-', '').toLowerCase()] = obj[k];
                     }
                 }
 
                 return result;
             };
 
-            var prices;
-            var class1;
-            var class2;
-
             if (step === 3) {
                 class2 = getPropertiesWithPrefix(ticketPriceMap, 'KLASSE_2');
                 class1 = getPropertiesWithPrefix(ticketPriceMap, 'KLASSE_1');
 
+                class1Einfach = getPropertiesWithPrefix(class1, 'einfach');
+                class1Retour = getPropertiesWithPrefix(class1, 'retour');
+                class2Einfach = getPropertiesWithPrefix(class2, 'einfach');
+                class2Retour = getPropertiesWithPrefix(class2, 'retour');
+
                 prices = {
                     class1: {
-                        einfach: getPropertiesWithPrefix(class1, 'einfach'),
-                        retour: getPropertiesWithPrefix(class1, 'retour')
+                        full: {
+                            oneWay: class1Einfach[0],
+                            roundTrip: class1Retour[0]
+                        },
+                        half: {
+                            oneWay: class1Einfach[1],
+                            roundTrip: class1Retour[1]
+                        },
+                        child: {
+                            oneWay: class1Einfach[3],
+                            roundTrip: class1Retour[3]
+                        }
                     },
                     class2: {
-                        einfach: getPropertiesWithPrefix(class2, 'einfach'),
-                        retour: getPropertiesWithPrefix(class2, 'retour')
+                        full: {
+                            oneWay: class2Einfach[0],
+                            roundTrip: class2Retour[0]
+                        },
+                        half: {
+                            oneWay: class2Einfach[1],
+                            roundTrip: class2Retour[1]
+                        },
+                        child: {
+                            oneWay: class2Einfach[3],
+                            roundTrip: class2Retour[3]
+                        }
                     }
                 };
             } else {
@@ -138,12 +160,20 @@ function getPrices() {
 
                 prices = {
                     class1: {
-                        full: class1[0],
-                        half: class1[1]
+                        full: {
+                            dayPass: class1[0],
+                        },
+                        half: {
+                            dayPass: class1[1]
+                        }
                     },
                     class2: {
-                        full: class2[0],
-                        half: class2[1]
+                        full: {
+                            dayPass: class2[0],
+                        },
+                        half: {
+                            dayPass: class2[1]
+                        }
                     }
                 };
             }
