@@ -43,8 +43,6 @@ page.open(url, function(status) {
 });
 
 page.onLoadFinished = function(status) {
-    // Save screenshot
-    // for debugging purposes
     if (status === 'success') {
         switch (stepIndex) {
             case 0:
@@ -63,6 +61,8 @@ page.onLoadFinished = function(status) {
                 var exit = getPrices();
                 break;
         }
+        // Save screenshot
+        // for debugging purposes
         page.render("step" + stepIndex+++".png");
         if (exit) {
             phantom.exit();
@@ -155,27 +155,31 @@ function getPrices() {
                     }
                 };
             } else {
-                class2 = getPropertiesWithPrefix(ticketPriceMap, 'KLASSE_2-');
-                class1 = getPropertiesWithPrefix(ticketPriceMap, 'KLASSE_1-');
+                try {
+                    class2 = getPropertiesWithPrefix(ticketPriceMap, 'KLASSE_2-');
+                    class1 = getPropertiesWithPrefix(ticketPriceMap, 'KLASSE_1-');
 
-                prices = {
-                    class1: {
-                        full: {
-                            dayPass: class1[0],
+                    prices = {
+                        class1: {
+                            full: {
+                                dayPass: class1[0],
+                            },
+                            half: {
+                                dayPass: class1[1]
+                            }
                         },
-                        half: {
-                            dayPass: class1[1]
+                        class2: {
+                            full: {
+                                dayPass: class2[0],
+                            },
+                            half: {
+                                dayPass: class2[1]
+                            }
                         }
-                    },
-                    class2: {
-                        full: {
-                            dayPass: class2[0],
-                        },
-                        half: {
-                            dayPass: class2[1]
-                        }
-                    }
-                };
+                    };
+                } catch (e) {
+                    console.log(e);
+                }
             }
             console.log(JSON.stringify(prices));
             return true;
